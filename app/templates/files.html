@@ -3,9 +3,9 @@
 {%block main%}
     <h1>My Photos</h1>
     <ul class=grid>
-        {%for file in files%}
+        {%for file in filename%}
         <li>
-            <img src="{{url_for('get_image',filename=file)}}"alt = MyGallery>
+            <img src="{{url_for('get_image',filename=file)}}">
         </li>
         {%endfor%}
     </ul>

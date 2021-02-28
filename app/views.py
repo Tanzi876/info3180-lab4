@@ -51,7 +51,7 @@ def upload():
 def get_uploaded_images():
     rootdir=os.getcwd()
     link=[]
-    for subdir,dirs,files in os.walk(rootdir+app.config['UPLOAD_FOLDER']):
+    for subdir,dirs,files in os.walk(rootdir+"/uploads"):
         for file in files:
             link.append(file)
     return link
@@ -59,7 +59,7 @@ def get_uploaded_images():
 @app.route('/uploads/<filename>')
 def get_image(filename):
     rootdir=os.getcwd()
-    return send_from_directory(rootdir+ app.config['UPLOAD_FOLDER'],filename)
+    return send_from_directory(rootdir+"/"+app.config["UPLOAD_FOLDER"],filename)
 
 @app.route('/files')
 def files():
