@@ -5,10 +5,12 @@ Werkzeug Documentation:  http://werkzeug.pocoo.org/documentation/
 This file creates your application.
 """
 import os
+
+from flask.helpers import send_from_directory
 from app import app
 from flask import render_template, request, redirect, url_for, flash, session, abort
 from werkzeug.utils import secure_filename
-
+from .forms import UploadForm
 
 ###
 # Routing for your application.
@@ -32,16 +34,40 @@ def upload():
         abort(401)
 
     # Instantiate your form class
-
+    pictures=UploadForm()
+        
     # Validate file upload on submit
     if request.method == 'POST':
         # Get file data and save to your uploads folder
+        photo=pictures.photo.data
+        filename=secure_filename(photo.filename)
+        photo.save(os.path.join(app.config['UPLOAD_FOLDER'],filename))
 
         flash('File Saved', 'success')
         return redirect(url_for('home'))
 
-    return render_template('upload.html')
+    return render_template('upload.html',form=pictures)
 
+def get_uploaded_images():
+    rootdir=os.getcwd()
+    link=[]
+    for subdir,dirs,files in os.walk(rootdir+app.config['UPLOAD_FOLDER']):
+        for file in files:
+            link.append(file)
+    return link
+
+@app.route('/uploads/<filename>')
+def get_image(filename):
+    rootdir=os.getcwd()
+    return send_from_directory(rootdir+ app.config['UPLOAD_FOLDER'],filename)
+
+@app.route('/files')
+def files():
+    photolink=[]
+    if not session.get('logged_in'):
+        abort(401)
+    photolink=get_uploaded_images()
+    return render_template('files.html',filename=photolink)
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
@@ -103,3 +129,4 @@ def page_not_found(error):
 
 if __name__ == '__main__':
     app.run(debug=True, host="0.0.0.0", port="8080")
+

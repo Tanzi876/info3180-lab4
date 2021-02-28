@@ -6,6 +6,7 @@ class Config(object):
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'Som3$ec5etK*y'
     ADMIN_USERNAME = os.environ.get('ADMIN_USERNAME') or 'admin'
     ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD') or 'Password123'
+    UPLOAD_FOLDER= os.environ.get('UPLOAD_FOLDER') or './uploads'
 
 
 class DevelopmentConfig(Config):
@@ -16,3 +17,5 @@ class DevelopmentConfig(Config):
 class ProductionConfig(Config):
     """Production Config that extends the Base Config Object"""
     DEBUG = False
+
+
